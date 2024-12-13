@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import { BsGithub, BsGoogle } from "react-icons/bs"
 import type { z } from "zod"
 
+import { login, register } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -17,7 +18,9 @@ import {
 	FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { AuthScehma } from "@/schema/auth"
+import { toast } from "sonner"
 
 export function AuthForm() {
 	const router = useRouter()
@@ -44,9 +47,21 @@ export function AuthForm() {
 	function onSubmit(values: z.infer<typeof AuthScehma>) {
 		startTransition(() => {
 			if (variant === "LOGIN") {
-				// Login
+				login(values).then((res) => {
+					if (res.success) {
+						toast.success(res.message)
+					} else {
+						toast.error(res.message)
+					}
+				})
 			} else {
-				// Register
+				register(values).then((res) => {
+					if (res.success) {
+						toast.success(res.message)
+					} else {
+						toast.error(res.message)
+					}
+				})
 			}
 		})
 	}
@@ -95,7 +110,7 @@ export function AuthForm() {
 								<FormItem>
 									<FormLabel>Password</FormLabel>
 									<FormControl>
-										<Input placeholder="Password" type="password" {...field} />
+										<PasswordInput placeholder="Password" type="password" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -142,6 +157,7 @@ export function AuthForm() {
 
 				<div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
 					<div>{variant === "LOGIN" ? "New to Messenger?" : "Already have an account?"}</div>
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div onClick={toggleVariant} className="underline cursor-pointer">
 						{variant === "LOGIN" ? "Create an account" : "Login"}
 					</div>

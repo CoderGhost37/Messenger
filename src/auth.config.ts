@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import Github from "next-auth/providers/github"
@@ -31,7 +31,7 @@ export default {
 					})
 
 					if (!user || !user?.password) {
-						throw new Error("Invalid credentials")
+						throw new Error("User not found")
 					}
 
 					const isCorrectPassword = await bcrypt.compare(password, user.password)
@@ -42,7 +42,7 @@ export default {
 
 					return user
 				}
-				throw new Error("Invalid credentials")
+				throw new Error("Invalid fields")
 			},
 		}),
 	],
