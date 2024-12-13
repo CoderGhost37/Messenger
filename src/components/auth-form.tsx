@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { BsGithub, BsGoogle } from "react-icons/bs"
 import type { z } from "zod"
 
-import { login, register } from "@/actions/auth"
+import { login, register, socialLogin } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
 	Form,
@@ -64,10 +64,6 @@ export function AuthForm() {
 				})
 			}
 		})
-	}
-
-	const socialAction = (action: string) => {
-		// Social login
 	}
 
 	return (
@@ -139,7 +135,7 @@ export function AuthForm() {
 							variant="outline"
 							size="icon"
 							className="w-full"
-							onClick={() => socialAction("github")}
+							onClick={() => socialLogin("github")}
 						>
 							<BsGithub size={20} />
 						</Button>
@@ -148,7 +144,7 @@ export function AuthForm() {
 							variant="outline"
 							size="icon"
 							className="w-full"
-							onClick={() => socialAction("google")}
+							onClick={() => socialLogin("google")}
 						>
 							<BsGoogle size={20} />
 						</Button>

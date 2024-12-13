@@ -6,6 +6,7 @@ import type { z } from "zod"
 import { signIn } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { AuthScehma } from "@/schema/auth"
+import { revalidatePath } from "next/cache"
 
 export async function register(values: z.infer<typeof AuthScehma>) {
 	const validatedFields = AuthScehma.safeParse(values)
@@ -72,4 +73,9 @@ export async function login(values: z.infer<typeof AuthScehma>) {
 			message: error.message,
 		}
 	}
+}
+
+export async function socialLogin(provider: string) {
+	await signIn(provider, { redirectTo: "/" })
+	revalidatePath("/")
 }
