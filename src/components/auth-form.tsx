@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useCallback, useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { BsGithub, BsGoogle } from "react-icons/bs"
-import { z } from "zod"
+import type { z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,20 +17,15 @@ import {
 	FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-
-const formSchema = z.object({
-	name: z.string(),
-	email: z.string().email(),
-	password: z.string().min(6),
-})
+import { AuthScehma } from "@/schema/auth"
 
 export function AuthForm() {
 	const router = useRouter()
 	const [variant, setVariant] = useState<"LOGIN" | "REGISTER">("LOGIN")
 	const [isPending, startTransition] = useTransition()
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<z.infer<typeof AuthScehma>>({
+		resolver: zodResolver(AuthScehma),
 		defaultValues: {
 			name: "",
 			email: "",
@@ -46,7 +41,7 @@ export function AuthForm() {
 		}
 	}, [variant])
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof AuthScehma>) {
 		startTransition(() => {
 			if (variant === "LOGIN") {
 				// Login
