@@ -19,9 +19,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { AuthScehma } from "@/schema/auth"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 export function AuthForm() {
+	const router = useRouter()
 	const [variant, setVariant] = useState<"LOGIN" | "REGISTER">("LOGIN")
 	const [isPending, startTransition] = useTransition()
 
@@ -48,6 +50,7 @@ export function AuthForm() {
 				login(values).then((res) => {
 					if (res.success) {
 						toast.success(res.message)
+						router.push("/users")
 					} else {
 						toast.error(res.message)
 					}
@@ -56,6 +59,7 @@ export function AuthForm() {
 				register(values).then((res) => {
 					if (res.success) {
 						toast.success(res.message)
+						router.push("/users")
 					} else {
 						toast.error(res.message)
 					}

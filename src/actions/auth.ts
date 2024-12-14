@@ -31,6 +31,8 @@ export async function register(values: z.infer<typeof AuthScehma>) {
 			},
 		})
 
+		await login({ email, password })
+
 		return {
 			success: true,
 			message: "Account created successfully",
