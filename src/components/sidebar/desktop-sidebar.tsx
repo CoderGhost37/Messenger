@@ -3,8 +3,8 @@ import { useState } from "react"
 
 import { useRoutes } from "@/hooks/use-routes"
 
+import { UserAvatar } from "@/components/avatar"
 import { DesktopItem } from "@/components/sidebar/desktop-item"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import type { SessionUser } from "@/schema/user"
 // import SettingsModal from "./SettingsModal";
 
@@ -46,15 +46,7 @@ export function DesktopSidebar({ user }: DesktopSidebarProps) {
 						onClick={() => setIsOpen(true)}
 						className="cursor-pointer hover:opacity-75 transition"
 					>
-						<div className="relative">
-							<Avatar>
-								<AvatarImage src={user?.image || "/images/placeholder.jpg"} />
-							</Avatar>
-
-							{isActive && (
-								<span className="absolute block rounded-full bg-green-500 ring-2 ring-white top-0 right-0 h-2 w-2 md:h-3 md:w-3" />
-							)}
-						</div>
+						<UserAvatar image={user?.image as string} />
 					</div>
 				</nav>
 			</div>
