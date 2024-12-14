@@ -76,3 +76,37 @@ export async function getConversation(
 
 	return newConversation
 }
+
+export async function getConversations() {
+	const user = await getUser()
+
+	if (!user || !user?.id) {
+		return []
+	}
+
+	try {
+		const conversations = await prisma.conversation.findMany({
+			orderBy: {
+				lastMessageAt: "desc",
+			},
+			where: {
+				userIds: {
+					has: user.id,
+				},
+			},
+			include: {
+				users: true,
+				messages: {
+					include: {
+						sender: true,
+						seen: true,
+					},
+				},
+			},
+		})
+
+		return conversations
+	} catch {
+		return []
+	}
+}
