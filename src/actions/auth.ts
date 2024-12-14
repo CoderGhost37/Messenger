@@ -3,9 +3,10 @@
 import bcrypt from "bcryptjs"
 import type { z } from "zod"
 
-import { signIn } from "@/auth"
+import { auth, signIn } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { AuthScehma } from "@/schema/auth"
+import { SessionUserSchema } from "@/schema/user"
 import { revalidatePath } from "next/cache"
 
 export async function register(values: z.infer<typeof AuthScehma>) {
@@ -80,4 +81,22 @@ export async function login(values: z.infer<typeof AuthScehma>) {
 export async function socialLogin(provider: string) {
 	await signIn(provider, { redirectTo: "/" })
 	revalidatePath("/")
+}
+
+export async function getUser() {
+	const session = await auth()
+
+	if (!session || !session.user) {
+		return null
+	}
+
+	const user = session.user
+
+	const validatedFields = SessionUserSchema.safeParse(user)
+
+	if (!validatedFields.success) {
+		return null
+	}
+
+	return validatedFields.data
 }
