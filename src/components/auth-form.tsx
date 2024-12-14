@@ -1,7 +1,6 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
 import { useCallback, useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { BsGithub, BsGoogle } from "react-icons/bs"
@@ -23,7 +22,6 @@ import { AuthScehma } from "@/schema/auth"
 import { toast } from "sonner"
 
 export function AuthForm() {
-	const router = useRouter()
 	const [variant, setVariant] = useState<"LOGIN" | "REGISTER">("LOGIN")
 	const [isPending, startTransition] = useTransition()
 
