@@ -110,3 +110,109 @@ export async function getConversations() {
 		return []
 	}
 }
+
+export async function getConversationById(conversationId: string) {
+	try {
+		const user = await getUser()
+
+		if (!user || !user?.email) {
+			return null
+		}
+
+		const conversation = await prisma.conversation.findUnique({
+			where: {
+				id: conversationId,
+			},
+			include: {
+				users: true,
+			},
+		})
+
+		return conversation
+	} catch {
+		return null
+	}
+}
+
+export async function getMessages(conversationId: string) {
+	try {
+		const messages = await prisma.message.findMany({
+			where: {
+				conversationId: conversationId,
+			},
+			include: {
+				sender: true,
+				seen: true,
+			},
+			orderBy: {
+				createdAt: "asc",
+			},
+		})
+
+		return messages
+	} catch {
+		return []
+	}
+}
+
+export async function sendMessage(conversationId: string, message?: string, image?: string) {
+	const user = await getUser()
+
+	if (!user) {
+		return null
+	}
+
+	try {
+		const newMessage = await prisma.message.create({
+			data: {
+				body: message,
+				image: image,
+				conversation: {
+					connect: {
+						id: conversationId,
+					},
+				},
+				sender: {
+					connect: {
+						id: user.id,
+					},
+				},
+				seen: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+			include: {
+				seen: true,
+				sender: true,
+			},
+		})
+
+		const updatedConversation = await prisma.conversation.update({
+			where: {
+				id: conversationId,
+			},
+			data: {
+				lastMessageAt: new Date(),
+				messages: {
+					connect: {
+						id: newMessage.id,
+					},
+				},
+			},
+			include: {
+				users: true,
+				messages: {
+					include: {
+						seen: true,
+					},
+				},
+			},
+		})
+
+		return newMessage
+	} catch (error: any) {
+		return null
+	}
+}

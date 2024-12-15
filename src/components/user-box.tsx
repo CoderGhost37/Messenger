@@ -16,7 +16,7 @@ export function UserBox({ data }: UserBoxProps) {
 	const handleClick = useCallback(() => {
 		startTransition(() => {
 			getConversation(data.id).then((conversation) => {
-				router.push(`/conversation/${conversation.id}`)
+				router.push(`/conversations/${conversation.id}`)
 			})
 		})
 	}, [data, router])
