@@ -269,3 +269,41 @@ export async function seenMessage(conversationId: string) {
 		return null
 	}
 }
+
+export async function deleteConversation(conversationId: string) {
+	const user = await getUser()
+	if (!user || !user.id) {
+		return {
+			success: false,
+		}
+	}
+
+	const existingConversation = await prisma.conversation.findUnique({
+		where: {
+			id: conversationId,
+		},
+		include: {
+			users: true,
+		},
+	})
+
+	if (!existingConversation) {
+		return {
+			success: false,
+		}
+	}
+
+	const deletedConversation = await prisma.conversation.deleteMany({
+		where: {
+			id: conversationId,
+			userIds: {
+				hasSome: [user.id],
+			},
+		},
+	})
+
+	return {
+		success: true,
+		deletedConversation,
+	}
+}
