@@ -9,6 +9,18 @@ import { AuthScehma } from "@/schema/auth"
 import { SessionUserSchema } from "@/schema/user"
 import { revalidatePath } from "next/cache"
 
+export async function getuserById(id: string) {
+	return await prisma.user.findUnique({
+		where: {
+			id,
+		},
+		select: {
+			name: true,
+			image: true,
+		},
+	})
+}
+
 export async function register(values: z.infer<typeof AuthScehma>) {
 	const validatedFields = AuthScehma.safeParse(values)
 

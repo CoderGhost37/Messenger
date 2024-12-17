@@ -27,3 +27,26 @@ export async function getUsers() {
 		return []
 	}
 }
+
+export async function updateUser(name: string, image: string) {
+	const user = await getUser()
+	if (!user || !user?.id) {
+		return { success: false }
+	}
+
+	try {
+		await prisma.user.update({
+			where: {
+				id: user.id,
+			},
+			data: {
+				name,
+				image,
+			},
+		})
+
+		return { success: true }
+	} catch {
+		return { success: false }
+	}
+}

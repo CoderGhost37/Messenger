@@ -27,7 +27,7 @@ export default async function ConversationPage({ params }: { params: { conversat
 
 	return (
 		<div className="lg:pl-80 min-h-screen">
-			<div className="min-h-screen flex flex-col">
+			<div className="h-screen flex flex-col">
 				<Header conversation={conversation} />
 				<Body initialMessages={messages} />
 				<MessageInput />
