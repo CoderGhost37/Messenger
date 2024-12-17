@@ -34,7 +34,7 @@ export function MessageBox({ data, isLast }: MessageBoxProps) {
 	const message = cn(
 		"text-sm w-fit overflow-hidden",
 		isOwn ? "bg-sky-500 text-white" : "bg-gray-100",
-		data.image ? "rounded-md p-0" : "rounded-full py-2 px-3"
+		data.image ? "bg-transparent rounded-md p-0" : "rounded-full py-2 px-3"
 	)
 
 	return (
@@ -51,10 +51,9 @@ export function MessageBox({ data, isLast }: MessageBoxProps) {
 					{data.image ? (
 						<Modal
 							open={imageModalOpen}
-							onClose={() => setImageModalOpen(false)}
+							toggle={() => setImageModalOpen((prev) => !prev)}
 							trigger={
 								<Image
-									onClick={() => setImageModalOpen(true)}
 									alt="Image"
 									height="288"
 									width="288"

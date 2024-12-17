@@ -1,3 +1,3 @@
 export const authRoutes = ["/"]
 
-export const restrictedRoutes = ["/users"]
+export const restrictedRoutes = ["/users", "/conversations"]

@@ -157,7 +157,6 @@ export async function getMessages(conversationId: string) {
 
 export async function sendMessage(conversationId: string, message?: string, image?: string) {
 	const user = await getUser()
-
 	if (!user) {
 		return null
 	}
@@ -212,7 +211,61 @@ export async function sendMessage(conversationId: string, message?: string, imag
 		})
 
 		return newMessage
-	} catch (error: any) {
+	} catch {
+		return null
+	}
+}
+
+export async function seenMessage(conversationId: string) {
+	const user = await getUser()
+	if (!user) {
+		return null
+	}
+
+	try {
+		const conversation = await prisma.conversation.findUnique({
+			where: {
+				id: conversationId,
+			},
+			include: {
+				messages: {
+					include: {
+						seen: true,
+					},
+				},
+				users: true,
+			},
+		})
+
+		if (!conversation) {
+			return null
+		}
+
+		const lastMessage = conversation.messages[conversation.messages.length - 1]
+
+		if (!lastMessage) {
+			return null
+		}
+
+		const updatedMessage = await prisma.message.update({
+			where: {
+				id: lastMessage.id,
+			},
+			data: {
+				seen: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+			include: {
+				sender: true,
+				seen: true,
+			},
+		})
+
+		return updatedMessage
+	} catch {
 		return null
 	}
 }

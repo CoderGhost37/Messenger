@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 
 interface ModalProps {
 	open: boolean
-	onClose: () => void
+	toggle: () => void
 	title?: string
 	description?: string
 	body: React.ReactNode
@@ -18,10 +18,10 @@ interface ModalProps {
 	className?: string
 }
 
-export function Modal({ open, onClose, title, description, body, trigger, className }: ModalProps) {
+export function Modal({ open, toggle, title, description, body, trigger, className }: ModalProps) {
 	return (
-		<Dialog open={open} onOpenChange={onClose}>
-			<DialogTrigger asChild>{trigger}</DialogTrigger>
+		<Dialog open={open} onOpenChange={toggle}>
+			<DialogTrigger>{trigger}</DialogTrigger>
 			<DialogContent className={cn("w-fit maxh-[80vh] overflow-y-auto overflow-hidden", className)}>
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
