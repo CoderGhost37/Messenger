@@ -24,7 +24,10 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.next()
 	}
 
-	if (restrictedRoutes.includes(nextUrl.pathname)) {
+	if (
+		restrictedRoutes.includes(nextUrl.pathname) ||
+		nextUrl.pathname.startsWith("/conversations")
+	) {
 		if (!user) {
 			return NextResponse.redirect(new URL("/", nextUrl.toString()))
 		}
