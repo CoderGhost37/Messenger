@@ -9,6 +9,7 @@ import { toast } from "sonner"
 
 import { deleteConversation } from "@/actions/conversations"
 import { UserAvatar } from "@/components/avatar"
+import { AvatarGroup } from "@/components/avatar-group"
 import { Modal } from "@/components/modal"
 import {
 	AlertDialog,
@@ -82,7 +83,11 @@ export function ProfileDrawer({ isOpen, toggle, data, trigger }: ProfileDrawerPr
 				<div className="relative w-96">
 					<div className="flex flex-col items-center">
 						<div className="mb-2">
-							<UserAvatar image={otherUser.image} />
+							{data.isGroup ? (
+								<AvatarGroup users={data.users} />
+							) : (
+								<UserAvatar image={otherUser.image} />
+							)}
 						</div>
 						<div>{title}</div>
 						<div className="text-sm text-gray-500">{statusText}</div>

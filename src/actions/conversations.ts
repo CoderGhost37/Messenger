@@ -6,7 +6,7 @@ import { getUser } from "./auth"
 export async function getConversation(
 	userId: string,
 	isGroup?: boolean,
-	members?: { value: string }[],
+	members?: { value: string; label: string }[],
 	name?: string
 ) {
 	const user = await getUser()
