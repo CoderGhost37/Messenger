@@ -71,7 +71,7 @@ export function ConversationBox({ data, selected }: ConversationBoxProps) {
 				selected ? "bg-neutral-100" : "bg-white"
 			)}
 		>
-			{data.isGroup ? <AvatarGroup users={data.users} /> : <UserAvatar image={otherUser.image} />}
+			{data.isGroup ? <AvatarGroup users={data.users} /> : <UserAvatar user={otherUser} />}
 			<div className="min-w-0 flex-1">
 				<div className="focus:outline-none">
 					<div className="flex justify-between items-center mb-1">

@@ -1,15 +1,20 @@
+import type { User } from "@prisma/client"
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { useActiveList } from "@/hooks/use-active-list"
 
 interface AvatarProps {
-	image: string | null
+	user: User | null
 }
 
-export function UserAvatar({ image }: AvatarProps) {
-	const isActive = true
+export function UserAvatar({ user }: AvatarProps) {
+	const { members } = useActiveList()
+	const isActive = members.indexOf(user?.email!) !== -1
+
 	return (
 		<div className="relative inline-block">
 			<Avatar>
-				<AvatarImage src={image || "/images/placeholder.jpg"} />
+				<AvatarImage src={user?.image || "/images/placeholder.jpg"} />
 			</Avatar>
 
 			{isActive && (

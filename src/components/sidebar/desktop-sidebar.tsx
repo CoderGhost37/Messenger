@@ -1,4 +1,5 @@
 "use client"
+import type { User } from "@prisma/client"
 import { useState } from "react"
 
 import { useRoutes } from "@/hooks/use-routes"
@@ -41,7 +42,7 @@ export function DesktopSidebar({ user }: DesktopSidebarProps) {
 					description="Update your profile information"
 					trigger={
 						<div className="cursor-pointer hover:opacity-75 transition">
-							<UserAvatar image={user?.image as string} />
+							<UserAvatar user={user as User} />
 						</div>
 					}
 					body={<SettingsDrawer user={user} toggle={() => setIsOpen((prev) => !prev)} />}

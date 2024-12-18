@@ -22,6 +22,7 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { useActiveList } from "@/hooks/use-active-list"
 import { useConversation } from "@/hooks/use-conversation"
 import { useOtherUser } from "@/hooks/use-other-user"
 
@@ -38,10 +39,11 @@ export function ProfileDrawer({ isOpen, toggle, data, trigger }: ProfileDrawerPr
 	const router = useRouter()
 	const { conversationId } = useConversation()
 	const otherUser = useOtherUser(data)
+	const { members } = useActiveList()
 	const [isPending, startTransition] = useTransition()
 	const [confirmOpen, setConfirmOpen] = useState(false)
 
-	const isActive = true
+	const isActive = members.indexOf(otherUser.email!) !== -1
 
 	const joinedDate = useMemo(() => {
 		return format(new Date(otherUser.createdAt), "PP")
@@ -83,11 +85,7 @@ export function ProfileDrawer({ isOpen, toggle, data, trigger }: ProfileDrawerPr
 				<div className="relative w-96">
 					<div className="flex flex-col items-center">
 						<div className="mb-2">
-							{data.isGroup ? (
-								<AvatarGroup users={data.users} />
-							) : (
-								<UserAvatar image={otherUser.image} />
-							)}
+							{data.isGroup ? <AvatarGroup users={data.users} /> : <UserAvatar user={otherUser} />}
 						</div>
 						<div>{title}</div>
 						<div className="text-sm text-gray-500">{statusText}</div>
