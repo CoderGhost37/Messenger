@@ -4,8 +4,8 @@ import { Body } from "@/components/chat/body"
 import { Header } from "@/components/chat/header"
 import { MessageInput } from "@/components/chat/message-input"
 
-export default async function ConversationPage({ params }: { params: { conversationId: string } }) {
-	const { conversationId } = params
+export default async function ConversationPage({ params }: { params: Promise<{ conversationId: string }> }) {
+	const conversationId = (await params).conversationId
 	const conversation = await getConversationById(conversationId)
 	const messages = await getMessages(conversationId)
 
