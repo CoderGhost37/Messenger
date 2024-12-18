@@ -37,6 +37,12 @@ export async function getConversation(
 			},
 		})
 
+		newConversation.users.map((user) => {
+			if (user.email) {
+				pusherServer.trigger(user.email, "conversation:new", newConversation)
+			}
+		})
+
 		return newConversation
 	}
 
@@ -73,6 +79,12 @@ export async function getConversation(
 		include: {
 			users: true,
 		},
+	})
+
+	newConversation.users.map((user) => {
+		if (user.email) {
+			pusherServer.trigger(user.email, "conversation:new", newConversation)
+		}
 	})
 
 	return newConversation
@@ -323,6 +335,12 @@ export async function deleteConversation(conversationId: string) {
 				hasSome: [user.id],
 			},
 		},
+	})
+
+	existingConversation.users.map((user) => {
+		if (user.email) {
+			pusherServer.trigger(user.email, "conversation:remove", existingConversation)
+		}
 	})
 
 	return {
