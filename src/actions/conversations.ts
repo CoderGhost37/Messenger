@@ -1,6 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
+import { pusherServer } from "@/lib/pusher"
 import { getUser } from "./auth"
 
 export async function getConversation(
@@ -210,6 +211,17 @@ export async function sendMessage(conversationId: string, message?: string, imag
 			},
 		})
 
+		await pusherServer.trigger(conversationId, "messages:new", newMessage)
+
+		const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1]
+
+		updatedConversation.users.map((user) => {
+			pusherServer.trigger(user.email!, "conversation:update", {
+				id: conversationId,
+				messages: [lastMessage],
+			})
+		})
+
 		return newMessage
 	} catch {
 		return null
@@ -263,6 +275,17 @@ export async function seenMessage(conversationId: string) {
 				seen: true,
 			},
 		})
+
+		await pusherServer.trigger(user.email!, "conversation:update", {
+			id: conversationId,
+			messages: [updatedMessage],
+		})
+
+		if (lastMessage.seenIds.indexOf(user.id) !== -1) {
+			return conversation
+		}
+
+		await pusherServer.trigger(conversationId, "message:update", updatedMessage)
 
 		return updatedMessage
 	} catch {
